@@ -153,6 +153,8 @@ class booking_manager {
             'other' => ['spaceid' => $spaceid],
         ])->trigger();
 
+        notifier::booking_created($booking);
+
         return $booking;
     }
 
@@ -207,6 +209,8 @@ class booking_manager {
             'other' => ['spaceid' => $booking->spaceid],
         ]);
         $event->trigger();
+
+        notifier::booking_cancelled($booking);
 
         return $booking;
     }

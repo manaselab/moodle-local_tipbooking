@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_tipbooking';
-$plugin->version = 2026112300;
+$plugin->version = 2026112301;
 $plugin->requires = 2024100700; // Moodle 4.5 LTS.
 $plugin->supported = [405, 503];
 $plugin->maturity = MATURITY_ALPHA;
