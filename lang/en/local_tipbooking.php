@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['bookingcancelled'] = 'Booking cancelled. The time is free again.';
+$string['bookingconfirmed'] = 'Booking confirmed. We have sent you a message.';
 $string['bookingsofnamed'] = 'Bookings of {$a}';
 $string['confirmdeletespace'] = 'Delete the space "{$a}"? Its image and all its bookings are deleted too. This cannot be undone.';
 $string['confirmdeletespacebookings'] = 'It has {$a} upcoming bookings: they will be cancelled and their holders notified.';
