@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/tipbooking/db" VERSION="20261123" COMMENT="XMLDB file for Moodle local/tipbooking"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="local_tipbooking_space" COMMENT="Bookable spaces: rooms, labs, equipment.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Name, may carry multilang tags."/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="descriptionformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="timezone" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Time zone the opening hours are expressed in."/>
+        <FIELD NAME="datefrom" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Midnight of the first bookable day, in the time zone of the space."/>
+        <FIELD NAME="dateto" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Midnight of the last bookable day, in the time zone of the space."/>
+        <FIELD NAME="hourfrom" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="480" SEQUENCE="false" COMMENT="Opening time, in minutes from midnight."/>
+        <FIELD NAME="hourto" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1080" SEQUENCE="false" COMMENT="Closing time, in minutes from midnight."/>
+        <FIELD NAME="slotduration" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="60" SEQUENCE="false" COMMENT="Length of each slot, in minutes."/>
+        <FIELD NAME="weekdays" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="31" SEQUENCE="false" COMMENT="Bookable weekdays as a bit mask: Monday 1, Tuesday 2 ... Sunday 64."/>
+        <FIELD NAME="visible" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="usermodified" TYPE="foreign" FIELDS="usermodified" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="visible" UNIQUE="false" FIELDS="visible"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_tipbooking_space_admin" COMMENT="Managers of a space, who are notified of its bookings.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="spaceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="spaceid" TYPE="foreign" FIELDS="spaceid" REFTABLE="local_tipbooking_space" REFFIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="spaceid-userid" UNIQUE="true" FIELDS="spaceid, userid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_tipbooking_booking" COMMENT="Bookings: one range of consecutive slots of one day.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="spaceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="day" TYPE="int" LENGTH="8" NOTNULL="true" SEQUENCE="false" COMMENT="Day of the booking as YYYYMMDD, in the time zone of the space."/>
+        <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timeend" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="1 active, 0 cancelled."/>
+        <FIELD NAME="activekey" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The day while active, minus the id once cancelled: keeps one active booking per user, space and day."/>
+        <FIELD NAME="cancelledby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecancelled" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="spaceid" TYPE="foreign" FIELDS="spaceid" REFTABLE="local_tipbooking_space" REFFIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="spaceid-userid-activekey" UNIQUE="true" FIELDS="spaceid, userid, activekey"/>
+        <INDEX NAME="spaceid-day" UNIQUE="false" FIELDS="spaceid, day"/>
+        <INDEX NAME="userid-timestart" UNIQUE="false" FIELDS="userid, timestart"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_tipbooking_slot" COMMENT="Slots taken by active bookings, one row per slot.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="spaceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="bookingid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="bookingid" TYPE="foreign" FIELDS="bookingid" REFTABLE="local_tipbooking_booking" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="spaceid-timestart" UNIQUE="true" FIELDS="spaceid, timestart" COMMENT="A slot can be taken only once, even with simultaneous requests."/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
