@@ -59,9 +59,10 @@ const render = async(region, form) => {
 
     const slots = [];
     let start = from;
-    while (duration > 0 && start + duration <= to) {
-        slots.push(`${clock(start)}–${clock(start + duration)}`);
-        start += duration;
+    if (duration > 0) {
+        for (; start + duration <= to; start += duration) {
+            slots.push(`${clock(start)}–${clock(start + duration)}`);
+        }
     }
 
     if (!slots.length) {
