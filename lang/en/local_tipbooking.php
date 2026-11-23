@@ -24,6 +24,20 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['error:alreadybookedtoday'] = 'You already have a booking of this space on this day. Cancel it to choose another range.';
+$string['error:cannotcancel'] = 'You cannot cancel this booking.';
+$string['error:invalidadmin'] = 'Only people who can manage spaces can be managers of a space.';
+$string['error:invalidrange'] = 'Choose a range of consecutive free slots of one day.';
+$string['error:noadmins'] = 'Choose at least one manager for the space.';
+$string['error:notactive'] = 'This booking has already been cancelled.';
+$string['error:rangeinpast'] = 'This range has already started. Choose a later one.';
+$string['error:slottaken'] = 'Somebody has just booked part of this range. Choose another one.';
+$string['error:spacenotavailable'] = 'This space is not available for booking.';
+$string['event:bookingcancelled'] = 'Booking cancelled';
+$string['event:bookingcreated'] = 'Booking created';
+$string['event:spacecreated'] = 'Space created';
+$string['event:spacedeleted'] = 'Space deleted';
+$string['event:spaceupdated'] = 'Space updated';
 $string['managespaces'] = 'Manage spaces';
 $string['pluginname'] = 'Space booking';
 $string['tipbooking:book'] = 'Book spaces';
