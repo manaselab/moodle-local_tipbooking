@@ -25,6 +25,9 @@
 namespace local_tipbooking;
 
 use context_system;
+use core\url;
+use core_collator;
+use core_user\fields;
 use dml_missing_record_exception;
 use local_tipbooking\event\space_created;
 use local_tipbooking\event\space_deleted;
@@ -210,6 +213,56 @@ class space_manager {
             return true;
         }
         return $DB->record_exists(self::ADMIN_TABLE, ['spaceid' => $spaceid, 'userid' => $userid]);
+    }
+
+    /**
+     * The people who can be managers of a space, to choose from.
+     *
+     * Only people who can manage spaces: they are few, so the list goes whole into the form.
+     *
+     * @return array User id => full name, sorted by name.
+     */
+    public static function get_manager_options(): array {
+        $namefields = fields::for_name()->get_sql('u')->selects;
+        $users = get_users_by_capability(context_system::instance(), 'local/tipbooking:manage', 'u.id' . $namefields);
+
+        $options = [];
+        foreach ($users as $user) {
+            $options[(int) $user->id] = fullname($user);
+        }
+        core_collator::asort($options);
+
+        return $options;
+    }
+
+    /**
+     * The image of a space.
+     *
+     * @param  int      $spaceid Identifier of the space.
+     * @return url|null          Address of the image, or null when the space has none.
+     */
+    public static function get_image_url(int $spaceid): ?url {
+        $files = get_file_storage()->get_area_files(
+            context_system::instance()->id,
+            'local_tipbooking',
+            self::FILEAREA_IMAGE,
+            $spaceid,
+            'filename',
+            false
+        );
+        $file = reset($files);
+        if (!$file) {
+            return null;
+        }
+
+        return url::make_pluginfile_url(
+            $file->get_contextid(),
+            $file->get_component(),
+            $file->get_filearea(),
+            $file->get_itemid(),
+            $file->get_filepath(),
+            $file->get_filename()
+        );
     }
 
     /**
