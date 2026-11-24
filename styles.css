@@ -207,3 +207,14 @@
         margin-top: 0;
     }
 }
+
+/* My bookings: on phones the item takes two lines and "Cancel" the full width. */
+@media (max-width: 575.98px) {
+    .local_tipbooking-booking-main {
+        flex-basis: calc(100% - 56px);
+    }
+
+    .local_tipbooking-booking-cancel {
+        width: 100%;
+    }
+}

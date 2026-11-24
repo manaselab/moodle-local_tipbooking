@@ -30,6 +30,7 @@ import Notification from 'core/notification';
 import Templates from 'core/templates';
 import {add as addToast} from 'core/toast';
 import {getString, getStrings} from 'core/str';
+import {confirmAndCancel} from 'local_tipbooking/cancel_booking';
 
 const COMPONENT = 'local_tipbooking';
 
@@ -422,30 +423,9 @@ class SpaceBooking {
      */
     async cancelBooking(trigger) {
         const button = this.dayButton();
-        try {
-            await Notification.deleteCancelPromise(
-                getString('cancel:title', COMPONENT),
-                getString('cancel:question', COMPONENT, {
-                    range: trigger.dataset.label,
-                    day: button ? button.dataset.daylabel : this.date,
-                }),
-                getString('cancel:confirm', COMPONENT),
-                {triggerElement: trigger}
-            );
-        } catch (error) {
-            return;
+        if (await confirmAndCancel(trigger, button ? button.dataset.daylabel : this.date)) {
+            await this.loadDay();
         }
-
-        try {
-            const result = await Ajax.call([{
-                methodname: 'local_tipbooking_cancel_booking',
-                args: {bookingid: Number(trigger.dataset.bookingid)},
-            }])[0];
-            addToast(result.message, {type: 'success'});
-        } catch (error) {
-            Notification.exception(error);
-        }
-        await this.loadDay();
     }
 
     /**

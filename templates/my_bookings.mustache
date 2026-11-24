@@ -1,0 +1,106 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_tipbooking/my_bookings
+
+    Bookings of the reader, grouped by day, with "Cancel" on the upcoming confirmed ones.
+
+    Context variables required for this template:
+    * tabs - The tabs, already rendered.
+    * groups - Days: title and items (id, spacename, spaceurl, hasimage, imageurl, range,
+      timezone, duration, daylabel, status, confirmed, inprogress, cancancel).
+    * hasbookings - Whether there is any booking.
+    * upcoming - Whether the list is of upcoming bookings.
+    * catalogueurl - The showcase.
+    * pagingbar - The paging bar, already rendered.
+
+    Example context (json):
+    {
+        "tabs": "",
+        "groups": [{"title": "Tomorrow", "items": [{
+            "id": 4, "spacename": "Prusa MK4 3D printer", "spaceurl": "#", "hasimage": false, "imageurl": "",
+            "range": "10:00–12:00", "timezone": "Asia/Bishkek", "duration": "2 h",
+            "daylabel": "Thursday, 3 December 2026", "status": "Confirmed",
+            "confirmed": true, "inprogress": false, "cancancel": true
+        }]}],
+        "hasbookings": true,
+        "upcoming": true,
+        "catalogueurl": "#",
+        "pagingbar": ""
+    }
+}}
+<div class="local_tipbooking-mybookings" data-region="local_tipbooking-mybookings">
+    {{{tabs}}}
+
+    {{#hasbookings}}
+        {{#groups}}
+            <section class="mb-4">
+                <h2 class="h5 mb-2">{{title}}</h2>
+                <ul class="list-group">
+                    {{#items}}
+                        <li class="list-group-item local_tipbooking-booking d-flex flex-wrap align-items-center gap-3" data-region="local_tipbooking-booking">
+                            {{#hasimage}}
+                                <img src="{{imageurl}}" alt="" class="local_tipbooking-thumb">
+                            {{/hasimage}}
+                            {{^hasimage}}
+                                <span class="local_tipbooking-thumb local_tipbooking-thumb-empty" aria-hidden="true"></span>
+                            {{/hasimage}}
+                            <div class="flex-grow-1 local_tipbooking-booking-main">
+                                <div class="fw-semibold">
+                                    {{#spaceurl}}<a href="{{spaceurl}}">{{spacename}}</a>{{/spaceurl}}
+                                    {{^spaceurl}}{{spacename}}{{/spaceurl}}
+                                </div>
+                                <div class="small text-muted">{{range}} · {{duration}} · {{timezone}}</div>
+                            </div>
+                            <span class="badge {{#confirmed}}bg-success{{/confirmed}}{{#inprogress}}bg-primary{{/inprogress}}{{^confirmed}}{{^inprogress}}bg-secondary text-dark{{/inprogress}}{{/confirmed}}"
+                                  data-region="local_tipbooking-status">{{status}}</span>
+                            {{#cancancel}}
+                                <button type="button" class="btn btn-outline-danger btn-sm local_tipbooking-booking-cancel"
+                                        data-action="local_tipbooking-cancel" data-bookingid="{{id}}"
+                                        data-label="{{range}}" data-daylabel="{{daylabel}}"
+                                        aria-label="{{#str}}mybookings:cancelnamed, local_tipbooking, { "space": {{#quote}}{{spacename}}{{/quote}}, "range": {{#quote}}{{range}}{{/quote}} } {{/str}}">
+                                    {{#str}}mybookings:cancel, local_tipbooking{{/str}}
+                                </button>
+                            {{/cancancel}}
+                        </li>
+                    {{/items}}
+                </ul>
+            </section>
+        {{/groups}}
+        {{{pagingbar}}}
+    {{/hasbookings}}
+
+    {{^hasbookings}}
+        <div class="local_tipbooking-empty text-center p-5 mt-3" role="status">
+            {{#upcoming}}
+                <h2 class="h5">{{#str}}mybookings:noupcoming, local_tipbooking{{/str}}</h2>
+                <p class="text-muted">{{#str}}mybookings:noupcoming_help, local_tipbooking{{/str}}</p>
+                <a class="btn btn-primary" href="{{catalogueurl}}">{{#str}}mybookings:seespaces, local_tipbooking{{/str}}</a>
+            {{/upcoming}}
+            {{^upcoming}}
+                <h2 class="h5 mb-0">{{#str}}mybookings:nopast, local_tipbooking{{/str}}</h2>
+            {{/upcoming}}
+        </div>
+    {{/hasbookings}}
+</div>
+{{#upcoming}}
+{{#js}}
+    require(['local_tipbooking/cancel_booking'], function(cancelBooking) {
+        cancelBooking.initList('[data-region="local_tipbooking-mybookings"]');
+    });
+{{/js}}
+{{/upcoming}}

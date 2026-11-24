@@ -262,4 +262,45 @@ final class booking_manager_test extends \advanced_testcase {
         $this->assertSame($soon->id, $upcoming[0]->id);
         $this->assertSame(1, booking_manager::count_user_bookings($user->id, false));
     }
+
+    /**
+     * Upcoming bookings come soonest first; past and cancelled ones, latest first, by pages.
+     *
+     * @return void
+     */
+    public function test_user_bookings_order(): void {
+        global $DB;
+
+        $user = $this->getDataGenerator()->create_user();
+        $day4 = (new slot_calculator($this->space))->day_slots($this->generator()->day_ahead($this->space, 4));
+        $day2 = (new slot_calculator($this->space))->day_slots($this->generator()->day_ahead($this->space, 2));
+        $later = booking_manager::book($this->space->id, $user->id, $day4[0]['start'], $day4[0]['end']);
+        $sooner = booking_manager::book($this->space->id, $user->id, $day2[0]['start'], $day2[0]['end']);
+
+        $this->assertSame(
+            [$sooner->id, $later->id],
+            array_map(fn($b) => $b->id, booking_manager::get_user_bookings($user->id, true))
+        );
+
+        // Ended bookings cannot be made through book(): they are written as they would be left.
+        $ended = [];
+        foreach ([10, 5] as $daysago) {
+            $start = time() - $daysago * DAYSECS;
+            $ended[$daysago] = $DB->insert_record(booking::TABLE, (object) [
+                'spaceid' => $this->space->id, 'userid' => $user->id,
+                'day' => (int) date('Ymd', $start), 'timestart' => $start, 'timeend' => $start + HOURSECS,
+                'status' => booking::STATUS_ACTIVE, 'activekey' => (int) date('Ymd', $start),
+                'cancelledby' => 0, 'timecancelled' => 0, 'timecreated' => $start, 'timemodified' => $start,
+            ]);
+        }
+        booking_manager::cancel($later->id, $user->id);
+
+        $past = booking_manager::get_user_bookings($user->id, false);
+        $this->assertSame([$later->id, $ended[5], $ended[10]], array_map(fn($b) => $b->id, $past));
+        $this->assertSame(3, booking_manager::count_user_bookings($user->id, false));
+        $this->assertSame(
+            [$ended[5]],
+            array_map(fn($b) => $b->id, booking_manager::get_user_bookings($user->id, false, 1, 1))
+        );
+    }
 }
