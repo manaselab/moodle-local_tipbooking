@@ -28,6 +28,7 @@
     * period, hours, slot, days - Details of the space.
     * canmanage - Whether the reader manages the space.
     * editurl - Page to edit the space.
+    * bookingsurl - Bookings of the space, for its managers.
     * ended - Whether the bookable period is over.
     * endedlabel - Message for an ended period.
     * week - Days of the week (see local_tipbooking/day_selector).
@@ -51,6 +52,7 @@
         "days": "Mon, Tue, Wed, Thu, Fri",
         "canmanage": true,
         "editurl": "#",
+        "bookingsurl": "#",
         "ended": false,
         "endedlabel": "",
         "week": [],
@@ -81,7 +83,10 @@
             <div class="d-flex flex-wrap align-items-start justify-content-between gap-2">
                 <h2 class="h3 mb-0">{{name}}</h2>
                 {{#canmanage}}
-                    <a class="btn btn-outline-secondary btn-sm" href="{{editurl}}">{{#str}}editspace, local_tipbooking{{/str}}</a>
+                    <div class="d-flex gap-2">
+                        <a class="btn btn-outline-secondary btn-sm" href="{{editurl}}">{{#str}}editspace, local_tipbooking{{/str}}</a>
+                        <a class="btn btn-outline-secondary btn-sm" href="{{bookingsurl}}">{{#str}}spacebookings:viewbookings, local_tipbooking{{/str}}</a>
+                    </div>
                 {{/canmanage}}
             </div>
             <div class="local_tipbooking-space-description" id="local_tipbooking-description-{{id}}">

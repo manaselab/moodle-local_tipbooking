@@ -1,0 +1,60 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_tipbooking/space_bookings
+
+    Bookings of one space for its managers: header, filters and the table.
+
+    Context variables required for this template:
+    * title - Heading of the page.
+    * zonelabel - Time zone the times are written in.
+    * editurl - Page to edit the space.
+    * spaceurl - Page of the space.
+    * filterform - The filter form, already rendered.
+    * table - The table, already rendered.
+
+    Example context (json):
+    {
+        "title": "Bookings of Prusa MK4 3D printer",
+        "zonelabel": "Times in the time zone of the space: Asia/Bishkek",
+        "editurl": "#",
+        "spaceurl": "#",
+        "filterform": "<form></form>",
+        "table": "<table></table>"
+    }
+}}
+<div class="local_tipbooking-spacebookings" data-region="local_tipbooking-spacebookings">
+    <div class="d-flex flex-wrap align-items-start justify-content-between gap-2 mb-2">
+        <h2 class="mb-0">{{title}}</h2>
+        <div class="d-flex gap-2">
+            <a class="btn btn-outline-secondary btn-sm" href="{{editurl}}">{{#str}}editspace, local_tipbooking{{/str}}</a>
+            <a class="btn btn-outline-secondary btn-sm" href="{{spaceurl}}">{{#str}}spacebookings:viewpage, local_tipbooking{{/str}}</a>
+        </div>
+    </div>
+    <p class="text-muted">{{zonelabel}}</p>
+    <div class="local_tipbooking-filters mb-3">
+        {{{filterform}}}
+    </div>
+    <div class="local_tipbooking-tablewrap">
+        {{{table}}}
+    </div>
+</div>
+{{#js}}
+    require(['local_tipbooking/cancel_booking'], function(cancelBooking) {
+        cancelBooking.initList('[data-region="local_tipbooking-spacebookings"]');
+    });
+{{/js}}

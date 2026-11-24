@@ -125,6 +125,7 @@ class space_page implements renderable, templatable {
             'days' => space_summary::days($this->space),
             'canmanage' => $this->canmanage,
             'editurl' => (new url('/local/tipbooking/edit.php', ['id' => $this->space->id]))->out(false),
+            'bookingsurl' => (new url('/local/tipbooking/bookings.php', ['spaceid' => $this->space->id]))->out(false),
             'ended' => $ended,
             'endedlabel' => get_string('space:ended', 'local_tipbooking', userdate(
                 $this->space->dateto,

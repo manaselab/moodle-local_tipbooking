@@ -32,8 +32,9 @@ const COMPONENT = 'local_tipbooking';
 /**
  * Asks for confirmation and cancels a booking.
  *
- * @param {HTMLElement} trigger Button with data-bookingid and data-label (the range); it gets
- *        the focus back when the modal closes.
+ * @param {HTMLElement} trigger Button with data-bookingid and data-label (the range), and
+ *        data-user when a manager cancels the booking of somebody else; it gets the focus
+ *        back when the modal closes.
  * @param {String} day The day of the booking, ready to print.
  * @returns {Promise<Boolean>} True when the booking was cancelled.
  */
@@ -41,7 +42,13 @@ export const confirmAndCancel = async(trigger, day) => {
     try {
         await Notification.deleteCancelPromise(
             getString('cancel:title', COMPONENT),
-            getString('cancel:question', COMPONENT, {range: trigger.dataset.label, day}),
+            trigger.dataset.user
+                ? getString('spacebookings:cancelquestion', COMPONENT, {
+                    user: trigger.dataset.user,
+                    range: trigger.dataset.label,
+                    day,
+                })
+                : getString('cancel:question', COMPONENT, {range: trigger.dataset.label, day}),
             getString('cancel:confirm', COMPONENT),
             {triggerElement: trigger}
         );
@@ -66,9 +73,10 @@ export const confirmAndCancel = async(trigger, day) => {
 /**
  * Lets the "Cancel" buttons of a list of bookings work.
  *
- * Each button carries data-bookingid, data-label and data-daylabel. After cancelling, the
- * item stays in the list with the "Cancelled" badge and without the button, so the reader
- * sees what changed.
+ * Each button carries data-bookingid, data-label and data-daylabel, inside an item
+ * (data-region="local_tipbooking-booking") or a table row. After cancelling, the item stays
+ * with the "Cancelled" badge (data-region="local_tipbooking-status") and without the button,
+ * so the reader sees what changed.
  *
  * @param {String} selector Selector of the list.
  */
@@ -84,7 +92,7 @@ export const initList = selector => {
         if (!trigger || !await confirmAndCancel(trigger, trigger.dataset.daylabel)) {
             return;
         }
-        const item = trigger.closest('[data-region="local_tipbooking-booking"]');
+        const item = trigger.closest('[data-region="local_tipbooking-booking"], tr');
         const badge = item.querySelector('[data-region="local_tipbooking-status"]');
         badge.textContent = await getString('mybookings:statuscancelled', COMPONENT);
         badge.className = 'badge bg-secondary text-dark';
