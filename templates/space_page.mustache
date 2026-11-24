@@ -1,0 +1,134 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_tipbooking/space_page
+
+    Page of one space: its details, the week of the chosen day and the slots of that day.
+
+    Context variables required for this template:
+    * id - Identifier of the space.
+    * name - Name of the space.
+    * description - Description, as HTML.
+    * hasimage - Whether it has an image.
+    * imageurl - Its image.
+    * period, hours, slot, days - Details of the space.
+    * canmanage - Whether the reader manages the space.
+    * editurl - Page to edit the space.
+    * ended - Whether the bookable period is over.
+    * endedlabel - Message for an ended period.
+    * week - Days of the week (see local_tipbooking/day_selector).
+    * prevurl, nexturl, todayurl - Week navigation.
+    * zonelabel - Time zone of the times shown.
+    * showusertime - Whether the reader is in another time zone.
+    * usertimelabel - Note about the time zone of the reader.
+    * grid - The chosen day (see local_tipbooking/slot_grid).
+    * config - Settings of the script, as JSON.
+
+    Example context (json):
+    {
+        "id": 1,
+        "name": "Prusa MK4 3D printer",
+        "description": "<p>PLA and PETG printing.</p>",
+        "hasimage": false,
+        "imageurl": "",
+        "period": "1 December 2026 – 31 March 2027",
+        "hours": "08:30–17:30 · Asia/Bishkek",
+        "slot": "Slots of 1 h",
+        "days": "Mon, Tue, Wed, Thu, Fri",
+        "canmanage": true,
+        "editurl": "#",
+        "ended": false,
+        "endedlabel": "",
+        "week": [],
+        "prevurl": "#",
+        "nexturl": "#",
+        "todayurl": "#",
+        "zonelabel": "Times in Asia/Bishkek (UTC+06:00)",
+        "showusertime": false,
+        "usertimelabel": "",
+        "grid": {"date": "2026-12-03", "daylabel": "Thursday, 3 December 2026", "hasslots": false, "closed": true,
+            "full": false, "hasmybooking": false, "mybooking": null, "slots": []},
+        "config": "{}"
+    }
+}}
+<div class="local_tipbooking-space" data-region="local_tipbooking-space" data-config="{{config}}">
+    <section class="local_tipbooking-space-header d-flex flex-column flex-md-row gap-4 mb-4">
+        <div class="local_tipbooking-space-image flex-shrink-0">
+            {{#hasimage}}
+                <img src="{{imageurl}}" alt="" class="rounded w-100">
+            {{/hasimage}}
+            {{^hasimage}}
+                <div class="local_tipbooking-card-noimage rounded d-flex align-items-center justify-content-center" aria-hidden="true">
+                    {{#pix}}i/calendar, core{{/pix}}
+                </div>
+            {{/hasimage}}
+        </div>
+        <div class="flex-grow-1 d-flex flex-column gap-3">
+            <div class="d-flex flex-wrap align-items-start justify-content-between gap-2">
+                <h2 class="h3 mb-0">{{name}}</h2>
+                {{#canmanage}}
+                    <a class="btn btn-outline-secondary btn-sm" href="{{editurl}}">{{#str}}editspace, local_tipbooking{{/str}}</a>
+                {{/canmanage}}
+            </div>
+            <div class="local_tipbooking-space-description" id="local_tipbooking-description-{{id}}">
+                {{{description}}}
+            </div>
+            <dl class="local_tipbooking-space-meta small mb-0">
+                <dt>{{#str}}table:period, local_tipbooking{{/str}}</dt>
+                <dd class="mb-0">{{period}}</dd>
+                <dt>{{#str}}table:hours, local_tipbooking{{/str}}</dt>
+                <dd class="mb-0">{{hours}}</dd>
+                <dt>{{#str}}table:slot, local_tipbooking{{/str}}</dt>
+                <dd class="mb-0">{{slot}}</dd>
+                <dt>{{#str}}table:days, local_tipbooking{{/str}}</dt>
+                <dd class="mb-0">{{days}}</dd>
+                <dt>{{#str}}space:rule, local_tipbooking{{/str}}</dt>
+                <dd class="mb-0">{{#str}}space:rule_desc, local_tipbooking{{/str}}</dd>
+            </dl>
+        </div>
+    </section>
+
+    <section class="local_tipbooking-availability" aria-labelledby="local_tipbooking-availability-{{id}}">
+        <h2 class="h4" id="local_tipbooking-availability-{{id}}">{{#str}}form:availability, local_tipbooking{{/str}}</h2>
+        {{#ended}}
+            <div class="alert alert-info" role="status">{{endedlabel}}</div>
+        {{/ended}}
+        {{^ended}}
+            {{> local_tipbooking/day_selector }}
+            <p class="small text-muted mb-1">{{zonelabel}}</p>
+            {{#showusertime}}<p class="small text-muted">{{usertimelabel}}</p>{{/showusertime}}
+            <div data-region="local_tipbooking-grid" aria-live="polite">
+                {{#grid}}{{> local_tipbooking/slot_grid }}{{/grid}}
+            </div>
+            {{> local_tipbooking/range_bar }}
+            <ul class="local_tipbooking-legend list-inline small mt-3 mb-0">
+                <li class="list-inline-item"><span class="local_tipbooking-dot local_tipbooking-dot-free"></span>{{#str}}legend:free, local_tipbooking{{/str}}</li>
+                <li class="list-inline-item"><span class="local_tipbooking-dot local_tipbooking-dot-range"></span>{{#str}}legend:range, local_tipbooking{{/str}}</li>
+                <li class="list-inline-item"><span class="local_tipbooking-dot local_tipbooking-dot-busy"></span>{{#str}}legend:busy, local_tipbooking{{/str}}</li>
+                <li class="list-inline-item"><span class="local_tipbooking-dot local_tipbooking-dot-mine"></span>{{#str}}legend:mine, local_tipbooking{{/str}}</li>
+                <li class="list-inline-item"><span class="local_tipbooking-dot local_tipbooking-dot-unavailable"></span>{{#str}}legend:unavailable, local_tipbooking{{/str}}</li>
+            </ul>
+        {{/ended}}
+    </section>
+</div>
+{{^ended}}
+{{#js}}
+    require(['local_tipbooking/space_booking'], function(spaceBooking) {
+        spaceBooking.init('[data-region="local_tipbooking-space"]');
+    });
+{{/js}}
+{{/ended}}

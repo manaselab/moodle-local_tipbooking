@@ -1,0 +1,111 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_tipbooking/slot_grid
+
+    Slots of one day. Drawn by the page for the first day and by
+    local_tipbooking/space_booking for the others, with the same context.
+
+    Context variables required for this template:
+    * date - The day, as YYYY-MM-DD.
+    * daylabel - The day, ready to print.
+    * hasslots - Whether the day has slots.
+    * closed - The space cannot be booked that day.
+    * full - No slot is free and the reader has no booking that day.
+    * hasmybooking - Whether the reader has a booking that day.
+    * mybooking - id and label of that booking.
+    * slots - index, start, end, label and one of free, busy, mine, past, blocked.
+
+    Example context (json):
+    {
+        "date": "2026-12-03",
+        "daylabel": "Thursday, 3 December 2026",
+        "hasslots": true,
+        "closed": false,
+        "full": false,
+        "hasmybooking": false,
+        "mybooking": null,
+        "slots": [
+            {"index": 0, "start": 1796270400, "end": 1796274000, "label": "09:00–10:00", "past": true},
+            {"index": 1, "start": 1796274000, "end": 1796277600, "label": "10:00–11:00", "free": true},
+            {"index": 2, "start": 1796277600, "end": 1796281200, "label": "11:00–12:00", "busy": true}
+        ]
+    }
+}}
+<div class="local_tipbooking-grid" data-date="{{date}}">
+    <h3 class="h5 mb-3">{{daylabel}}</h3>
+
+    {{#hasmybooking}}
+        <div class="alert alert-success d-flex flex-wrap align-items-center justify-content-between gap-2" role="status">
+            <span>{{#str}}grid:mybooking, local_tipbooking, {{mybooking.label}}{{/str}}</span>
+            <button type="button" class="btn btn-outline-danger btn-sm" data-action="local_tipbooking-cancel"
+                    data-bookingid="{{mybooking.id}}" data-label="{{mybooking.label}}">
+                {{#str}}grid:cancelmine, local_tipbooking{{/str}}
+            </button>
+        </div>
+    {{/hasmybooking}}
+
+    {{#closed}}
+        <div class="local_tipbooking-empty text-center p-4" role="status">
+            {{#str}}grid:closed, local_tipbooking{{/str}}
+        </div>
+    {{/closed}}
+
+    {{#full}}
+        <div class="local_tipbooking-empty text-center p-4 mb-3" role="status">
+            <p>{{#str}}grid:full, local_tipbooking{{/str}}</p>
+            <button type="button" class="btn btn-outline-primary" data-action="local_tipbooking-nextfree">
+                {{#str}}grid:nextfree, local_tipbooking{{/str}}
+            </button>
+        </div>
+    {{/full}}
+
+    {{#hasslots}}
+        <div class="local_tipbooking-slots" role="group" aria-label="{{daylabel}}">
+            {{#slots}}
+                {{#free}}
+                    <button type="button" class="local_tipbooking-slot is-free" data-action="local_tipbooking-slot"
+                            data-index="{{index}}" data-start="{{start}}" data-end="{{end}}" data-label="{{label}}"
+                            aria-pressed="false">
+                        {{label}}<span class="visually-hidden"> · {{#str}}legend:free, local_tipbooking{{/str}}</span>
+                    </button>
+                {{/free}}
+                {{#mine}}
+                    <button type="button" class="local_tipbooking-slot is-mine" data-action="local_tipbooking-cancel"
+                            data-index="{{index}}" data-bookingid="{{mybooking.id}}" data-label="{{mybooking.label}}">
+                        {{label}}<span class="visually-hidden"> · {{#str}}legend:mine, local_tipbooking{{/str}}</span>
+                    </button>
+                {{/mine}}
+                {{#busy}}
+                    <span class="local_tipbooking-slot is-busy" data-index="{{index}}">
+                        {{label}}<span class="visually-hidden"> · {{#str}}legend:busy, local_tipbooking{{/str}}</span>
+                    </span>
+                {{/busy}}
+                {{#past}}
+                    <span class="local_tipbooking-slot is-unavailable" data-index="{{index}}">
+                        {{label}}<span class="visually-hidden"> · {{#str}}legend:unavailable, local_tipbooking{{/str}}</span>
+                    </span>
+                {{/past}}
+                {{#blocked}}
+                    <span class="local_tipbooking-slot is-unavailable" data-index="{{index}}">
+                        {{label}}<span class="visually-hidden"> · {{#str}}legend:unavailable, local_tipbooking{{/str}}</span>
+                    </span>
+                {{/blocked}}
+            {{/slots}}
+        </div>
+    {{/hasslots}}
+</div>

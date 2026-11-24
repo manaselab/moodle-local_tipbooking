@@ -1,0 +1,64 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_tipbooking/day_selector
+
+    The seven days of a week with the state of each. Changing week reloads the page;
+    choosing a day of the week loads its slots.
+
+    Context variables required for this template:
+    * week - Days: date, dow, num, sub, daylabel, selected, today, disabled, past, closed,
+      mine, full, freecount.
+    * prevurl, nexturl - The previous and the next week.
+    * todayurl - The page on its default day.
+
+    Example context (json):
+    {
+        "week": [
+            {"date": "2026-12-03", "dow": "Thu", "num": 3, "sub": "5 free", "daylabel": "Thursday, 3 December 2026",
+             "selected": true, "today": false, "disabled": false, "past": false, "closed": false, "mine": false,
+             "full": false, "freecount": 5}
+        ],
+        "prevurl": "#",
+        "nexturl": "#",
+        "todayurl": "#"
+    }
+}}
+<div class="local_tipbooking-days d-flex align-items-center gap-2 mb-3">
+    <a class="btn btn-icon btn-outline-secondary flex-shrink-0" href="{{prevurl}}"
+       title="{{#str}}space:prevweek, local_tipbooking{{/str}}">
+        {{#pix}}t/left, core{{/pix}}<span class="visually-hidden">{{#str}}space:prevweek, local_tipbooking{{/str}}</span>
+    </a>
+    <div class="local_tipbooking-days-list d-flex gap-2 flex-grow-1" role="group"
+         aria-label="{{#str}}space:chooseday, local_tipbooking{{/str}}">
+        {{#week}}
+            <button type="button" class="local_tipbooking-day{{#selected}} is-selected{{/selected}}{{#mine}} is-mine{{/mine}}{{#full}} is-full{{/full}}"
+                    data-action="local_tipbooking-day" data-date="{{date}}" data-daylabel="{{daylabel}}"
+                    aria-pressed="{{#selected}}true{{/selected}}{{^selected}}false{{/selected}}"
+                    aria-label="{{daylabel}}: {{sub}}" {{#disabled}}disabled{{/disabled}}>
+                <span class="local_tipbooking-day-dow">{{dow}}</span>
+                <strong class="local_tipbooking-day-num">{{num}}</strong>
+                <span class="local_tipbooking-day-sub" data-region="local_tipbooking-day-sub">{{sub}}</span>
+            </button>
+        {{/week}}
+    </div>
+    <a class="btn btn-icon btn-outline-secondary flex-shrink-0" href="{{nexturl}}"
+       title="{{#str}}space:nextweek, local_tipbooking{{/str}}">
+        {{#pix}}t/right, core{{/pix}}<span class="visually-hidden">{{#str}}space:nextweek, local_tipbooking{{/str}}</span>
+    </a>
+</div>
+<p class="mb-2"><a href="{{todayurl}}" class="small">{{#str}}space:today, local_tipbooking{{/str}}</a></p>

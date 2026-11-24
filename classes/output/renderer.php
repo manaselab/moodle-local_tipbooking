@@ -43,4 +43,14 @@ class renderer extends plugin_renderer_base {
     protected function render_catalogue(catalogue $catalogue): string {
         return $this->render_from_template('local_tipbooking/catalogue', $catalogue->export_for_template($this));
     }
+
+    /**
+     * Renders the page of a space.
+     *
+     * @param  space_page $page The page.
+     * @return string           The HTML.
+     */
+    protected function render_space_page(space_page $page): string {
+        return $this->render_from_template('local_tipbooking/space_page', $page->export_for_template($this));
+    }
 }
