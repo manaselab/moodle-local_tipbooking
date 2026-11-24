@@ -216,6 +216,47 @@ class space_manager {
     }
 
     /**
+     * Visible spaces that match a text and, optionally, have a free slot on a day.
+     *
+     * Spaces are few, so every match is loaded and the day is checked in PHP, which keeps
+     * the rules of the slots in one place (the calculator); the page is cut afterwards.
+     *
+     * @param  string      $text   Text to look for in the name and the description; empty for any.
+     * @param  string|null $date   Day, as Y-m-d, on which the space must have a free slot; null for any.
+     * @param  int         $limit  How many spaces at most; 0 for all.
+     * @param  int         $offset How many to skip.
+     * @return array               ['total' => int, 'spaces' => space[]].
+     */
+    public static function search_visible(string $text, ?string $date, int $limit = 0, int $offset = 0): array {
+        global $DB;
+
+        $where = 'visible = 1';
+        $params = [];
+        $text = trim($text);
+        if ($text !== '') {
+            $where .= ' AND (' . $DB->sql_like('name', ':name', false, false)
+                . ' OR ' . $DB->sql_like('description', ':description', false, false) . ')';
+            $params['name'] = '%' . $DB->sql_like_escape($text) . '%';
+            $params['description'] = $params['name'];
+        }
+
+        $spaces = array_values(array_map(
+            [space::class, 'from_record'],
+            $DB->get_records_select(space::TABLE, $where, $params, 'name ASC, id ASC')
+        ));
+
+        if ($date !== null) {
+            $free = booking_manager::count_free_slots($spaces, $date);
+            $spaces = array_values(array_filter($spaces, fn(space $space) => ($free[$space->id] ?? 0) > 0));
+        }
+
+        return [
+            'total' => count($spaces),
+            'spaces' => $limit > 0 ? array_slice($spaces, $offset, $limit) : array_slice($spaces, $offset),
+        ];
+    }
+
+    /**
      * The people who can be managers of a space, to choose from.
      *
      * Only people who can manage spaces: they are few, so the list goes whole into the form.

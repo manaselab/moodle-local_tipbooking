@@ -1,0 +1,78 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_tipbooking/space_card
+
+    Card of one space in the showcase. The whole card opens the page of the space.
+
+    Context variables required for this template:
+    * name - Name of the space.
+    * excerpt - Start of its description.
+    * url - Page of the space.
+    * imageurl - Its image, when it has one.
+    * hasimage - Whether it has an image.
+    * period - Bookable period.
+    * hours - Opening hours and time zone.
+    * slot - Slot length.
+    * days - Bookable days.
+    * mybookings - Upcoming bookings of the reader there.
+    * hasmybookings - Whether the reader has any.
+
+    Example context (json):
+    {
+        "name": "Ala Too meeting room",
+        "excerpt": "Room for 8 people with a screen.",
+        "url": "#",
+        "imageurl": "",
+        "hasimage": false,
+        "period": "1 December 2026 – 30 June 2027",
+        "hours": "09:00–19:00 · Asia/Bishkek",
+        "slot": "Slots of 2 h",
+        "days": "Mon, Tue, Wed, Thu, Fri",
+        "mybookings": 0,
+        "hasmybookings": false
+    }
+}}
+<article class="card h-100 local_tipbooking-card">
+    <div class="local_tipbooking-card-image position-relative">
+        {{#hasimage}}
+            <img src="{{imageurl}}" alt="" class="card-img-top">
+        {{/hasimage}}
+        {{^hasimage}}
+            <div class="local_tipbooking-card-noimage d-flex align-items-center justify-content-center" aria-hidden="true">
+                {{#pix}}i/calendar, core{{/pix}}
+            </div>
+        {{/hasimage}}
+        {{#hasmybookings}}
+            <span class="badge bg-primary position-absolute top-0 start-0 m-2">
+                {{#str}}catalogue:mybookingshere, local_tipbooking, {{mybookings}}{{/str}}
+            </span>
+        {{/hasmybookings}}
+    </div>
+    <div class="card-body d-flex flex-column gap-2">
+        <h3 class="h5 card-title mb-0">
+            <a href="{{url}}" class="stretched-link text-reset text-decoration-none">{{name}}</a>
+        </h3>
+        {{#excerpt}}<p class="card-text text-muted mb-0">{{excerpt}}</p>{{/excerpt}}
+        <ul class="list-unstyled small mb-0">
+            <li>{{period}}</li>
+            <li>{{hours}}</li>
+            <li>{{slot}} · {{days}}</li>
+        </ul>
+        <span class="mt-auto pt-2 fw-semibold text-primary">{{#str}}catalogue:viewavailability, local_tipbooking{{/str}} →</span>
+    </div>
+</article>

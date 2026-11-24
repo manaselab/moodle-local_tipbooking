@@ -119,6 +119,57 @@ final class space_manager_test extends \advanced_testcase {
     }
 
     /**
+     * Search by text, hidden spaces left out, and paging after filtering.
+     *
+     * @return void
+     */
+    public function test_search_visible_by_text(): void {
+        $this->generator()->create_space(['name' => 'Prusa 3D printer']);
+        $this->generator()->create_space(['name' => 'Meeting room', 'description' => 'With a 3D screen']);
+        $this->generator()->create_space(['name' => 'Laser cutter']);
+        $this->generator()->create_space(['name' => 'Hidden 3D lab', 'visible' => 0]);
+
+        $all = space_manager::search_visible('', null);
+        $this->assertSame(3, $all['total']);
+
+        $found = space_manager::search_visible('3d', null);
+        $this->assertSame(2, $found['total']);
+        $this->assertSame(['Meeting room', 'Prusa 3D printer'], array_map(fn($s) => $s->name, $found['spaces']));
+
+        $page = space_manager::search_visible('', null, 2, 2);
+        $this->assertSame(3, $page['total']);
+        $this->assertCount(1, $page['spaces']);
+    }
+
+    /**
+     * The "free on" filter leaves out full, closed and out-of-period spaces.
+     *
+     * @return void
+     */
+    public function test_search_visible_by_date(): void {
+        $open = $this->generator()->create_space(['name' => 'Open']);
+        $full = $this->generator()->create_space(['name' => 'Full', 'hourfrom' => 540, 'hourto' => 600]);
+        $this->generator()->create_space(['name' => 'Closed', 'weekdays' => 0]);
+        $date = $this->generator()->day_ahead($open, 5);
+        $this->generator()->create_space([
+            'name' => 'Ended',
+            'dateto' => (new \DateTimeImmutable($this->generator()->day_ahead($open, 1), $open->get_timezone()))->getTimestamp(),
+        ]);
+
+        $slot = (new slot_calculator($full))->day_slots($date)[0];
+        $user = $this->getDataGenerator()->create_user();
+        $this->generator()->create_booking([
+            'spaceid' => $full->id,
+            'userid' => $user->id,
+            'timestart' => $slot['start'],
+            'timeend' => $slot['end'],
+        ]);
+
+        $found = space_manager::search_visible('', $date);
+        $this->assertSame(['Open'], array_map(fn($s) => $s->name, $found['spaces']));
+    }
+
+    /**
      * Deleting a space cancels its upcoming bookings and removes everything of it.
      *
      * @return void

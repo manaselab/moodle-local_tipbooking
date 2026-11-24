@@ -1,0 +1,120 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_tipbooking/catalogue
+
+    Showcase of the bookable spaces: header, filters, cards and paging.
+
+    Context variables required for this template:
+    * cards - Cards of the spaces of the page (see local_tipbooking/space_card).
+    * hascards - Whether there is any card.
+    * summary - How many spaces match.
+    * filtered - Whether a filter is applied.
+    * nospaces - No space exists at all.
+    * noresults - Filters leave no space.
+    * clearurl - The showcase without filters.
+    * mybookingsurl - Page of the bookings of the reader.
+    * myupcoming - Upcoming bookings of the reader.
+    * canmanage - Whether the reader can manage spaces.
+    * manageurl - Page to manage spaces.
+    * newspaceurl - Page to create a space.
+    * filterform - The filter form, already rendered.
+    * pagingbar - The paging bar, already rendered.
+
+    Example context (json):
+    {
+        "cards": [{
+            "name": "Prusa MK4 3D printer",
+            "excerpt": "PLA and PETG printing.",
+            "url": "#",
+            "imageurl": "",
+            "hasimage": false,
+            "period": "1 December 2026 – 31 March 2027",
+            "hours": "08:30–17:30 · Asia/Bishkek",
+            "slot": "Slots of 1 h",
+            "days": "Mon, Tue, Wed, Thu, Fri",
+            "mybookings": 2,
+            "hasmybookings": true
+        }],
+        "hascards": true,
+        "summary": "Spaces: 1",
+        "filtered": false,
+        "nospaces": false,
+        "noresults": false,
+        "clearurl": "#",
+        "mybookingsurl": "#",
+        "myupcoming": 2,
+        "canmanage": true,
+        "manageurl": "#",
+        "newspaceurl": "#",
+        "filterform": "<form></form>",
+        "pagingbar": ""
+    }
+}}
+<div class="local_tipbooking-catalogue">
+    <div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
+        <p class="mb-0 text-muted">{{#str}}catalogue:intro, local_tipbooking{{/str}}</p>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-secondary" href="{{mybookingsurl}}">
+                {{#str}}mybookings, local_tipbooking{{/str}}
+                <span class="badge bg-primary ms-1">{{myupcoming}}</span>
+            </a>
+            {{#canmanage}}
+                <a class="btn btn-secondary" href="{{manageurl}}">{{#str}}managespaces, local_tipbooking{{/str}}</a>
+            {{/canmanage}}
+        </div>
+    </div>
+
+    <button class="btn btn-outline-secondary w-100 mb-3 d-md-none" type="button"
+            data-bs-toggle="collapse" data-toggle="collapse"
+            data-bs-target="#local_tipbooking-filters" data-target="#local_tipbooking-filters"
+            aria-expanded="false" aria-controls="local_tipbooking-filters">
+        {{#str}}filter:toggle, local_tipbooking{{/str}}
+    </button>
+    <div id="local_tipbooking-filters" class="collapse d-md-block local_tipbooking-filters mb-4">
+        {{{filterform}}}
+    </div>
+
+    {{#hascards}}
+        <p class="mb-3" role="status">{{summary}}</p>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3 mb-4">
+            {{#cards}}
+                <div class="col">
+                    {{> local_tipbooking/space_card }}
+                </div>
+            {{/cards}}
+        </div>
+        {{{pagingbar}}}
+    {{/hascards}}
+
+    {{#noresults}}
+        <div class="local_tipbooking-empty text-center p-5" role="status">
+            <h3 class="h5">{{#str}}catalogue:noresults, local_tipbooking{{/str}}</h3>
+            <p class="text-muted">{{#str}}catalogue:noresults_help, local_tipbooking{{/str}}</p>
+            <a class="btn btn-outline-primary" href="{{clearurl}}">{{#str}}filter:clearall, local_tipbooking{{/str}}</a>
+        </div>
+    {{/noresults}}
+
+    {{#nospaces}}
+        <div class="local_tipbooking-empty text-center p-5" role="status">
+            <h3 class="h5">{{#str}}catalogue:nospaces, local_tipbooking{{/str}}</h3>
+            {{#canmanage}}
+                <a class="btn btn-primary" href="{{newspaceurl}}">{{#str}}catalogue:createfirst, local_tipbooking{{/str}}</a>
+            {{/canmanage}}
+        </div>
+    {{/nospaces}}
+</div>

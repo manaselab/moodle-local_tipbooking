@@ -11,3 +11,26 @@
     display: inline-block;
     background-color: var(--manaselab-neutral-50, var(--bs-secondary-bg, #f1f5f8));
 }
+
+/* Showcase cards; F11 completes the plugin styles. */
+.local_tipbooking-card-image img,
+.local_tipbooking-card-noimage {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    object-fit: cover;
+}
+
+.local_tipbooking-card-noimage {
+    background-color: var(--manaselab-neutral-50, var(--bs-secondary-bg, #f1f5f8));
+}
+
+.local_tipbooking-card-noimage .icon {
+    width: 48px;
+    height: 48px;
+    font-size: 48px;
+}
+
+.local_tipbooking-empty {
+    border: 1.5px dashed var(--manaselab-neutral-200, var(--bs-border-color, #cfd9e1));
+    border-radius: 10px;
+}

@@ -273,6 +273,81 @@ class booking_manager {
     }
 
     /**
+     * How many slots of a day are still free in each of some spaces.
+     *
+     * A slot is free when nobody holds it and it has not started. The taken slots of every
+     * space are read in one query.
+     *
+     * @param  space[] $spaces The spaces.
+     * @param  string  $date   The day, as Y-m-d; each space reads it in its own time zone.
+     * @param  int|null $now   The current moment; null for now.
+     * @return array           Space id => number of free slots.
+     */
+    public static function count_free_slots(array $spaces, string $date, ?int $now = null): array {
+        global $DB;
+
+        $now = $now ?? time();
+        $slots = [];
+        $from = PHP_INT_MAX;
+        $to = 0;
+        foreach ($spaces as $space) {
+            $slots[$space->id] = (new slot_calculator($space))->day_slots($date);
+            foreach ($slots[$space->id] as $slot) {
+                $from = min($from, $slot['start']);
+                $to = max($to, $slot['start']);
+            }
+        }
+
+        $taken = [];
+        $ids = array_keys(array_filter($slots));
+        if ($ids !== []) {
+            [$insql, $params] = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED);
+            $params += ['from' => $from, 'to' => $to];
+            $rows = $DB->get_recordset_select(
+                self::SLOT_TABLE,
+                "spaceid $insql AND timestart >= :from AND timestart <= :to",
+                $params,
+                '',
+                'id, spaceid, timestart'
+            );
+            foreach ($rows as $row) {
+                $taken[(int) $row->spaceid][(int) $row->timestart] = true;
+            }
+            $rows->close();
+        }
+
+        $free = [];
+        foreach ($slots as $spaceid => $daysslots) {
+            $free[$spaceid] = count(array_filter(
+                $daysslots,
+                fn($slot) => $slot['start'] > $now && !isset($taken[$spaceid][$slot['start']])
+            ));
+        }
+
+        return $free;
+    }
+
+    /**
+     * How many upcoming bookings a person holds in each space.
+     *
+     * @param  int   $userid Identifier of the person.
+     * @return array         Space id => number of active bookings that have not ended.
+     */
+    public static function count_upcoming_by_space(int $userid): array {
+        global $DB;
+
+        $counts = $DB->get_records_sql_menu(
+            'SELECT spaceid, COUNT(1)
+               FROM {' . booking::TABLE . '}
+              WHERE userid = :userid AND status = :active AND timeend > :now
+           GROUP BY spaceid',
+            ['userid' => $userid, 'active' => booking::STATUS_ACTIVE, 'now' => time()]
+        );
+
+        return array_map('intval', $counts);
+    }
+
+    /**
      * The active booking of a person in a space on a day.
      *
      * @param  int          $spaceid Identifier of the space.
