@@ -118,7 +118,7 @@ class my_bookings implements renderable, templatable {
 
         return [
             'id' => $booking->id,
-            'spacename' => space_summary::name($space),
+            'spacename' => space_summary::name($space, false),
             'spaceurl' => $space->visible
                 ? (new url('/local/tipbooking/space.php', ['id' => $space->id, 'date' => $date]))->out(false)
                 : '',

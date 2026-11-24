@@ -1,3 +1,4 @@
 /tests export-ignore
 /devtools export-ignore
 /.gitattributes export-ignore
+/bitbucket-pipelines.yml export-ignore

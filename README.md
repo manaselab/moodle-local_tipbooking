@@ -5,7 +5,7 @@
 <h1 align="center">Space booking</h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.1.0-informational" alt="Version">
+  <img src="https://img.shields.io/badge/version-1.0.0-informational" alt="Version">
   <a href="https://moodle.org"><img src="https://img.shields.io/badge/Moodle-4.5%2B-orange?logo=moodle" alt="Moodle"></a>
   <img src="https://img.shields.io/badge/PHP-8.1%2B-777BB4?logo=php&logoColor=white" alt="PHP">
   <img src="https://img.shields.io/badge/License-GPL--3.0-green" alt="License">
@@ -19,8 +19,7 @@ search and an availability filter. Any signed-in user books a range of consecuti
 of one day, and the range is blocked for everybody else at once. There is no approval step and
 no waiting list. It does not modify Moodle core or any theme.
 
-> **Status:** early development (0.1.0). Only the plugin skeleton and its data model are in
-> place; the screens arrive in the next releases.
+> **Languages:** English, Russian, Kyrgyz and Turkish.
 
 ---
 
@@ -52,7 +51,7 @@ room and day, which keeps the room available for everyone.
 
 | Requirement | Version |
 |---|---|
-| Moodle | 4.5 or later |
+| Moodle | 4.5 or later (tested on 5.2) |
 | PHP | 8.1 or later |
 | Other plugins | None |
 
@@ -63,6 +62,21 @@ room and day, which keeps the room available for everyone.
    (or `php admin/cli/upgrade.php --non-interactive`).
 3. Purge the caches (**Site administration › Development › Purge caches**
    or `php admin/cli/purge_caches.php`).
+
+## 🗺️ Pages
+
+| Page | Who | What |
+|---|---|---|
+| `/local/tipbooking/index.php` | Signed-in users | The showcase, with text search and the "free on" filter |
+| `/local/tipbooking/space.php?id=` | Signed-in users | A space: its week, the slots of a day, booking a range and cancelling one's own |
+| `/local/tipbooking/mybookings.php` | Signed-in users | One's upcoming and past bookings, with cancellation |
+| `/local/tipbooking/manage.php` | Managers | Every space: create, edit, hide, delete |
+| `/local/tipbooking/bookings.php?spaceid=` | Managers of the space | The bookings of one space, with filters, download and cancellation |
+
+**Names and descriptions in several languages** use the multilang filter. In the description,
+write one `<span lang="xx" class="multilang">` per language **inside** each paragraph: a
+span wrapped around a paragraph is not valid HTML, and Moodle cleans it before the filter
+runs, so every language shows at once.
 
 ## 🔐 Permissions
 

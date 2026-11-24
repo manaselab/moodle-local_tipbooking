@@ -104,6 +104,27 @@ final class notifier_test extends \advanced_testcase {
     }
 
     /**
+     * A name with an ampersand reaches the plain text as it is and the HTML escaped once.
+     *
+     * @return void
+     */
+    public function test_name_is_escaped_once(): void {
+        global $DB;
+
+        $DB->set_field(models\space::TABLE, 'name', 'R&D lab', ['id' => $this->space->id]);
+        $holder = $this->getDataGenerator()->create_user();
+        $sink = $this->redirectMessages();
+
+        booking_manager::book($this->space->id, $holder->id, $this->slots[0]['start'], $this->slots[0]['end']);
+
+        $tome = array_values(array_filter($sink->get_messages(), fn($m) => (int) $m->useridto === (int) $holder->id))[0];
+        $this->assertStringContainsString('R&D lab', $tome->subject);
+        $this->assertStringContainsString('R&D lab', $tome->fullmessage);
+        $this->assertStringContainsString('R&amp;D lab', $tome->fullmessagehtml);
+        $this->assertStringNotContainsString('&amp;amp;', $tome->fullmessagehtml);
+    }
+
+    /**
      * Cancelling sends a notice to the holder and to each manager.
      *
      * @return void

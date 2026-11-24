@@ -115,7 +115,7 @@ class space_page implements renderable, templatable {
 
         return [
             'id' => $this->space->id,
-            'name' => space_summary::name($this->space),
+            'name' => space_summary::name($this->space, false),
             'description' => space_summary::description($this->space),
             'hasimage' => $this->imageurl !== null,
             'imageurl' => $this->imageurl?->out(false) ?? '',
@@ -145,7 +145,7 @@ class space_page implements renderable, templatable {
             'grid' => self::grid_context($this->space, $this->date, $chosen, $this->day_label($this->date), $this->canbook),
             'config' => json_encode([
                 'spaceid' => $this->space->id,
-                'spacename' => space_summary::name($this->space),
+                'spacename' => space_summary::name($this->space, false),
                 'timezone' => $zone->getName(),
                 'usertimezone' => $usertimezone,
                 'canbook' => $this->canbook,

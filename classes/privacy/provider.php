@@ -131,7 +131,7 @@ class provider implements
         $root = get_string('pluginname', 'local_tipbooking');
         $path = fn(string $key): array => [$root, get_string('privacy:path:' . $key, 'local_tipbooking')];
         $names = $DB->get_records_menu(space::TABLE, null, '', 'id, name');
-        $spacename = fn(int $id): string => format_string($names[$id] ?? '', true, ['context' => $context]);
+        $spacename = fn(int $id): string => format_string($names[$id] ?? '', true, ['context' => $context, 'escape' => false]);
 
         $mine = $DB->get_records(booking::TABLE, ['userid' => $userid], 'timestart ASC');
         if ($mine) {

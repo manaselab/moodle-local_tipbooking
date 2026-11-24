@@ -67,7 +67,7 @@ class space_bookings_table extends sql_table {
 
         parent::__construct('local_tipbooking_space_bookings_' . $space->id);
         $this->now = time();
-        $name = format_string($space->name, true, ['context' => \context_system::instance()]);
+        $name = format_string($space->name, true, ['context' => \context_system::instance(), 'escape' => false]);
         $this->is_downloading(
             $download,
             clean_filename('bookings-' . $name),

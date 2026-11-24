@@ -37,13 +37,15 @@ use local_tipbooking\models\space;
  */
 class space_summary {
     /**
-     * Name of the space, ready to print.
+     * Name of the space, in the language of the reader.
      *
-     * @param  space  $space The space.
-     * @return string        The name in the language of the reader.
+     * @param  space  $space  The space.
+     * @param  bool   $escape True for HTML; false for a template, which escapes it itself, or
+     *                        for plain text.
+     * @return string         The name.
      */
-    public static function name(space $space): string {
-        return format_string($space->name, true, ['context' => context_system::instance()]);
+    public static function name(space $space, bool $escape = true): string {
+        return format_string($space->name, true, ['context' => context_system::instance(), 'escape' => $escape]);
     }
 
     /**

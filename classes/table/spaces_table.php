@@ -268,7 +268,8 @@ class spaces_table extends sql_table {
         global $OUTPUT;
 
         $manage = '/local/tipbooking/manage.php';
-        $name = format_string($row->name, true, ['context' => context_system::instance()]);
+        // The icons escape their title themselves.
+        $name = format_string($row->name, true, ['context' => context_system::instance(), 'escape' => false]);
         $visibility = $row->visible ? 'hide' : 'show';
 
         return $OUTPUT->action_icon(

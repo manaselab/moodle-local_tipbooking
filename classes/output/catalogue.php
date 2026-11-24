@@ -90,7 +90,7 @@ class catalogue implements renderable, templatable {
             $image = $this->imageurls[$space->id] ?? null;
             $mine = (int) ($this->mycounts[$space->id] ?? 0);
             $cards[] = [
-                'name' => space_summary::name($space),
+                'name' => space_summary::name($space, false),
                 'excerpt' => space_summary::excerpt($space),
                 'url' => (new url('/local/tipbooking/space.php', ['id' => $space->id]))->out(false),
                 'imageurl' => $image instanceof url ? $image->out(false) : '',

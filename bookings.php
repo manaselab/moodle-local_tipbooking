@@ -124,7 +124,8 @@ $tablehtml = ob_get_clean();
 
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('local_tipbooking/space_bookings', [
-    'title' => get_string('bookingsofnamed', 'local_tipbooking', $name),
+    // The template escapes the title itself.
+    'title' => get_string('bookingsofnamed', 'local_tipbooking', space_summary::name($space, false)),
     'zonelabel' => get_string('spacebookings:zone', 'local_tipbooking', $zone),
     'editurl' => (new url('/local/tipbooking/edit.php', ['id' => $space->id]))->out(false),
     'spaceurl' => (new url('/local/tipbooking/space.php', ['id' => $space->id]))->out(false),

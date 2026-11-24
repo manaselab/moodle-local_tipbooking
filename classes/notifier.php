@@ -124,7 +124,7 @@ class notifier {
             $context = context_system::instance();
             $timezone = $space->get_timezone()->getName();
             $a = (object) [
-                'space' => format_string($space->name, true, ['context' => $context]),
+                'space' => format_string($space->name, true, ['context' => $context, 'escape' => false]),
                 'day' => userdate($booking->timestart, get_string('strftimedaydate', 'langconfig'), $timezone),
                 'from' => userdate($booking->timestart, get_string('strftimetime', 'langconfig'), $timezone),
                 'to' => userdate($booking->timeend, get_string('strftimetime', 'langconfig'), $timezone),
@@ -142,7 +142,7 @@ class notifier {
             $message->subject = get_string('message:' . $name . ':subject', 'local_tipbooking', $a);
             $message->fullmessage = get_string('message:' . $name . ':body', 'local_tipbooking', $a);
             $message->fullmessageformat = FORMAT_PLAIN;
-            $message->fullmessagehtml = text_to_html($message->fullmessage, false, false, true);
+            $message->fullmessagehtml = text_to_html(s($message->fullmessage), false, false, true);
             $message->smallmessage = $message->subject;
             $message->notification = 1;
             $message->contexturl = $url->out(false);
