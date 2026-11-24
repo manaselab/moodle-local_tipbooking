@@ -87,12 +87,12 @@
                 {{#mine}}
                     <button type="button" class="local_tipbooking-slot is-mine" data-action="local_tipbooking-cancel"
                             data-index="{{index}}" data-bookingid="{{mybooking.id}}" data-label="{{mybooking.label}}">
-                        {{label}}<span class="visually-hidden"> · {{#str}}legend:mine, local_tipbooking{{/str}}</span>
+                        {{#pix}}t/check, core{{/pix}}{{label}}<span class="visually-hidden"> · {{#str}}legend:mine, local_tipbooking{{/str}}</span>
                     </button>
                 {{/mine}}
                 {{#busy}}
                     <span class="local_tipbooking-slot is-busy" data-index="{{index}}">
-                        {{label}}<span class="visually-hidden"> · {{#str}}legend:busy, local_tipbooking{{/str}}</span>
+                        {{#pix}}i/lock, core{{/pix}}{{label}}<span class="visually-hidden"> · {{#str}}legend:busy, local_tipbooking{{/str}}</span>
                     </span>
                 {{/busy}}
                 {{#past}}

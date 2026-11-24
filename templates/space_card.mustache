@@ -54,7 +54,7 @@
         {{/hasimage}}
         {{^hasimage}}
             <div class="local_tipbooking-card-noimage d-flex align-items-center justify-content-center" aria-hidden="true">
-                {{#pix}}i/calendar, core{{/pix}}
+                {{#pix}}i/noimage, local_tipbooking{{/pix}}
             </div>
         {{/hasimage}}
         {{#hasmybookings}}
@@ -73,6 +73,6 @@
             <li>{{hours}}</li>
             <li>{{slot}} · {{days}}</li>
         </ul>
-        <span class="mt-auto pt-2 fw-semibold text-primary">{{#str}}catalogue:viewavailability, local_tipbooking{{/str}} →</span>
+        <span class="mt-auto pt-2 fw-semibold local_tipbooking-card-cta">{{#str}}catalogue:viewavailability, local_tipbooking{{/str}} →</span>
     </div>
 </article>

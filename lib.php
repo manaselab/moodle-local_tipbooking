@@ -57,3 +57,15 @@ function local_tipbooking_pluginfile($course, $cm, $context, $filearea, $args, $
 
     send_stored_file($file, DAYSECS, 0, $forcedownload, $options);
 }
+
+/**
+ * FontAwesome icons of the plugin.
+ *
+ * @return array Icon name => FontAwesome class.
+ */
+function local_tipbooking_get_fontawesome_icon_map(): array {
+    return [
+        // Placeholder of a space without image.
+        'local_tipbooking:i/noimage' => 'fa-image',
+    ];
+}

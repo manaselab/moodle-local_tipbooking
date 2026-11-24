@@ -103,6 +103,7 @@
 
     {{#noresults}}
         <div class="local_tipbooking-empty text-center p-5" role="status">
+            <div class="local_tipbooking-empty-icon" aria-hidden="true">{{#pix}}i/search, core{{/pix}}</div>
             <h3 class="h5">{{#str}}catalogue:noresults, local_tipbooking{{/str}}</h3>
             <p class="text-muted">{{#str}}catalogue:noresults_help, local_tipbooking{{/str}}</p>
             <a class="btn btn-outline-primary" href="{{clearurl}}">{{#str}}filter:clearall, local_tipbooking{{/str}}</a>
@@ -111,6 +112,7 @@
 
     {{#nospaces}}
         <div class="local_tipbooking-empty text-center p-5" role="status">
+            <div class="local_tipbooking-empty-icon" aria-hidden="true">{{#pix}}i/calendar, core{{/pix}}</div>
             <h3 class="h5">{{#str}}catalogue:nospaces, local_tipbooking{{/str}}</h3>
             {{#canmanage}}
                 <a class="btn btn-primary" href="{{newspaceurl}}">{{#str}}catalogue:createfirst, local_tipbooking{{/str}}</a>

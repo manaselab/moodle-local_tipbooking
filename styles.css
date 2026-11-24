@@ -1,18 +1,103 @@
-/* Thumbnails of the spaces in the management table; F11 completes the plugin styles. */
+/*
+ * Styles of local_tipbooking.
+ *
+ * Every colour and radius goes through the --local_tipbooking-* properties below. They point
+ * to the tokens of theme_manaselab (--manaselab-*) and fall back to the Bootstrap variables of
+ * Boost, so the plugin follows any theme. Typography is the theme's.
+ */
+:root {
+    --local_tipbooking-action: var(--manaselab-blue-600, var(--bs-primary, #16789c));
+    --local_tipbooking-action-hover: var(--manaselab-blue-700, var(--bs-primary-text-emphasis, #10607e));
+    --local_tipbooking-action-subtle: var(--manaselab-blue-50, var(--bs-primary-bg-subtle, #eaf6fb));
+    /* Action colour for text on the surfaces; lighter in dark mode to keep 4.5:1. */
+    --local_tipbooking-action-text: var(--local_tipbooking-action);
+    --local_tipbooking-on-action: var(--manaselab-neutral-0, #fff);
+    --local_tipbooking-surface: var(--manaselab-neutral-0, var(--bs-body-bg, #fff));
+    --local_tipbooking-surface-muted: var(--manaselab-neutral-50, var(--bs-secondary-bg, #f1f5f8));
+    --local_tipbooking-surface-faint: var(--manaselab-neutral-25, var(--bs-tertiary-bg, #f7fafc));
+    --local_tipbooking-border: var(--manaselab-neutral-200, var(--bs-border-color, #cfd9e1));
+    --local_tipbooking-text: var(--manaselab-neutral-900, var(--bs-body-color, #16222b));
+    /* 600, not 500: muted text stays above 4.5:1 on the faint surfaces. */
+    --local_tipbooking-text-muted: var(--manaselab-neutral-600, var(--bs-secondary-color, #4b5f6e));
+    --local_tipbooking-slot-range: var(--local_tipbooking-action);
+    --local_tipbooking-slot-mine: var(--manaselab-green-600, var(--bs-success, #1b7a4b));
+    --local_tipbooking-slot-busy-bg: var(--local_tipbooking-surface-muted);
+    --local_tipbooking-slot-busy-border: var(--local_tipbooking-border);
+    --local_tipbooking-slot-past-bg: var(--local_tipbooking-surface-faint);
+    --local_tipbooking-danger: var(--manaselab-red-600, var(--bs-danger, #c0271f));
+    --local_tipbooking-radius-card: var(--manaselab-radius-md, var(--bs-border-radius-lg, 10px));
+    --local_tipbooking-radius-control: var(--manaselab-radius-sm, var(--bs-border-radius, 6px));
+    --local_tipbooking-focus-width: var(--manaselab-focus-width, 3px);
+    --local_tipbooking-focus-offset: var(--manaselab-focus-offset, 2px);
+    --local_tipbooking-focus-color: var(--manaselab-focus-color, var(--bs-primary, #16789c));
+    --local_tipbooking-shadow: var(--manaselab-shadow-2, 0 4px 12px rgba(0, 0, 0, 0.08));
+}
+
+/* Dark mode: the surfaces and texts fall to the ones of Boost, which change with the mode. */
+[data-bs-theme="dark"] {
+    --local_tipbooking-action-subtle: var(--bs-primary-bg-subtle);
+    --local_tipbooking-action-text: var(--bs-primary-text-emphasis);
+    --local_tipbooking-surface: var(--bs-body-bg);
+    --local_tipbooking-surface-muted: var(--bs-secondary-bg);
+    --local_tipbooking-surface-faint: var(--bs-tertiary-bg);
+    --local_tipbooking-border: var(--bs-border-color);
+    --local_tipbooking-text: var(--bs-body-color);
+    --local_tipbooking-text-muted: var(--bs-secondary-color);
+    --local_tipbooking-focus-color: var(--manaselab-focus-color-on-dark, var(--bs-body-color));
+}
+
+/* Visible focus for every control of the plugin. */
+.local_tipbooking-day:focus-visible,
+.local_tipbooking-slot:focus-visible,
+.local_tipbooking-card:focus-within {
+    outline: var(--local_tipbooking-focus-width) solid var(--local_tipbooking-focus-color);
+    outline-offset: var(--local_tipbooking-focus-offset);
+}
+
+/* Thumbnails: management table and "My bookings". */
 .local_tipbooking-thumb {
     width: 40px;
     height: 40px;
     flex: none;
-    border-radius: 6px;
+    border-radius: var(--local_tipbooking-radius-control);
     object-fit: cover;
 }
 
 .local_tipbooking-thumb-empty {
     display: inline-block;
-    background-color: var(--manaselab-neutral-50, var(--bs-secondary-bg, #f1f5f8));
+    background-color: var(--local_tipbooking-surface-muted);
 }
 
-/* Showcase cards; F11 completes the plugin styles. */
+/* Showcase: cards. The whole card is the link; the focus ring goes round the card. */
+.local_tipbooking-card {
+    border-color: var(--local_tipbooking-border);
+    border-radius: var(--local_tipbooking-radius-card);
+    overflow: hidden;
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+.local_tipbooking-card:hover {
+    box-shadow: var(--local_tipbooking-shadow);
+}
+
+.local_tipbooking-card .card-title a:focus {
+    outline: none;
+}
+
+.local_tipbooking-card .card-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.local_tipbooking-card .card-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 .local_tipbooking-card-image img,
 .local_tipbooking-card-noimage {
     aspect-ratio: 16 / 9;
@@ -21,169 +106,50 @@
 }
 
 .local_tipbooking-card-noimage {
-    background-color: var(--manaselab-neutral-50, var(--bs-secondary-bg, #f1f5f8));
+    background-color: var(--local_tipbooking-surface-muted);
+    color: var(--local_tipbooking-text-muted);
 }
 
 .local_tipbooking-card-noimage .icon {
     width: 48px;
     height: 48px;
     font-size: 48px;
+    margin: 0;
 }
 
+.local_tipbooking-card-cta {
+    color: var(--local_tipbooking-action-text);
+}
+
+.local_tipbooking-card:hover .local_tipbooking-card-cta {
+    color: var(--local_tipbooking-action-hover);
+}
+
+/* Empty states. */
 .local_tipbooking-empty {
-    border: 1.5px dashed var(--manaselab-neutral-200, var(--bs-border-color, #cfd9e1));
-    border-radius: 10px;
+    border: 1.5px dashed var(--local_tipbooking-border);
+    border-radius: var(--local_tipbooking-radius-card);
+    color: var(--local_tipbooking-text-muted);
 }
 
-/* Page of a space; F11 completes the plugin styles. */
+.local_tipbooking-empty-icon .icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    margin: 0 0 0.5rem;
+}
+
+/* Page of a space: header. */
 .local_tipbooking-space-image img,
 .local_tipbooking-space-image .local_tipbooking-card-noimage {
     aspect-ratio: 4 / 3;
     object-fit: cover;
+    border-radius: var(--local_tipbooking-radius-card);
 }
 
 @media (min-width: 768px) {
     .local_tipbooking-space-image {
         width: 320px;
-    }
-}
-
-.local_tipbooking-days-list {
-    overflow-x: auto;
-    padding: 2px;
-}
-
-.local_tipbooking-day {
-    flex: 1 0 64px;
-    min-height: 76px;
-    padding: 8px 4px;
-    border: 1px solid var(--manaselab-neutral-200, var(--bs-border-color, #cfd9e1));
-    border-radius: 6px;
-    background-color: var(--bs-body-bg, #fff);
-    color: inherit;
-    font-size: 0.75rem;
-    line-height: 1.35;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-}
-
-.local_tipbooking-day-num {
-    font-size: 1.25rem;
-}
-
-.local_tipbooking-day.is-selected {
-    border: 1.5px solid var(--bs-primary, #16789c);
-    background-color: var(--manaselab-primary-50, var(--bs-primary-bg-subtle, #eaf6fb));
-}
-
-.local_tipbooking-day.is-mine {
-    box-shadow: inset 0 -4px 0 var(--bs-success, #1b7a4b);
-}
-
-.local_tipbooking-day:disabled {
-    background-color: var(--manaselab-neutral-50, var(--bs-secondary-bg, #f7fafc));
-    color: var(--bs-secondary-color, #64798a);
-    cursor: not-allowed;
-}
-
-.local_tipbooking-slots {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 8px;
-}
-
-.local_tipbooking-slot {
-    min-height: 48px;
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1.5px solid transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 500;
-}
-
-.local_tipbooking-slot.is-free {
-    background-color: var(--bs-body-bg, #fff);
-    border-color: var(--bs-primary, #16789c);
-    color: var(--bs-primary, #16789c);
-}
-
-.local_tipbooking-slot.is-free:hover {
-    background-color: var(--manaselab-primary-50, var(--bs-primary-bg-subtle, #eaf6fb));
-}
-
-.local_tipbooking-slot.is-range {
-    background-color: var(--bs-primary, #16789c);
-    color: #fff;
-}
-
-.local_tipbooking-slot.is-busy {
-    background-color: var(--bs-secondary-bg, #f1f5f8);
-    border-color: var(--manaselab-neutral-200, var(--bs-border-color, #cfd9e1));
-    color: var(--bs-secondary-color, #4b5f6e);
-}
-
-.local_tipbooking-slot.is-mine {
-    background-color: var(--bs-success, #1b7a4b);
-    border-color: var(--bs-success, #1b7a4b);
-    color: #fff;
-}
-
-.local_tipbooking-slot.is-unavailable {
-    background-color: var(--manaselab-neutral-50, var(--bs-tertiary-bg, #f7fafc));
-    border: 1.5px dashed var(--manaselab-neutral-200, var(--bs-border-color, #cfd9e1));
-    color: var(--bs-secondary-color, #64798a);
-}
-
-.local_tipbooking-slot.is-skeleton {
-    background-color: var(--bs-secondary-bg, #e4ebf0);
-}
-
-.local_tipbooking-dot {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    margin-right: 6px;
-    border-radius: 4px;
-    vertical-align: -2px;
-    border: 1.5px solid transparent;
-}
-
-.local_tipbooking-dot-free {
-    border-color: var(--bs-primary, #16789c);
-}
-
-.local_tipbooking-dot-range {
-    background-color: var(--bs-primary, #16789c);
-}
-
-.local_tipbooking-dot-busy {
-    background-color: var(--bs-secondary-bg, #f1f5f8);
-    border-color: var(--manaselab-neutral-200, var(--bs-border-color, #cfd9e1));
-}
-
-.local_tipbooking-dot-mine {
-    background-color: var(--bs-success, #1b7a4b);
-}
-
-.local_tipbooking-dot-unavailable {
-    border: 1.5px dashed var(--manaselab-neutral-200, var(--bs-border-color, #cfd9e1));
-}
-
-/* The bar of the chosen range stays in reach while scrolling the slots on phones. */
-@media (max-width: 767.98px) {
-    .local_tipbooking-rangebar.card {
-        position: sticky;
-        bottom: 0;
-        z-index: 2;
-        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    .local_tipbooking-slots {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -205,6 +171,189 @@
 
     .local_tipbooking-space-meta dd + dt {
         margin-top: 0;
+    }
+}
+
+/* Day selector: the week scrolls inside its box on narrow screens. */
+.local_tipbooking-days-list {
+    overflow-x: auto;
+    padding: 4px;
+}
+
+.local_tipbooking-day {
+    flex: 1 0 64px;
+    min-height: 76px;
+    padding: 8px 4px;
+    border: 1px solid var(--local_tipbooking-border);
+    border-radius: var(--local_tipbooking-radius-control);
+    background-color: var(--local_tipbooking-surface);
+    color: var(--local_tipbooking-text);
+    font-size: 0.75rem;
+    line-height: 1.35;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.local_tipbooking-day:hover:not(:disabled) {
+    border-color: var(--local_tipbooking-action);
+}
+
+.local_tipbooking-day-num {
+    font-size: 1.25rem;
+}
+
+.local_tipbooking-day.is-selected {
+    border: 1.5px solid var(--local_tipbooking-action);
+    background-color: var(--local_tipbooking-action-subtle);
+}
+
+.local_tipbooking-day.is-full {
+    color: var(--local_tipbooking-action-hover);
+}
+
+.local_tipbooking-day.is-mine {
+    box-shadow: inset 0 -4px 0 var(--local_tipbooking-slot-mine);
+}
+
+.local_tipbooking-day:disabled {
+    background-color: var(--local_tipbooking-surface-muted);
+    color: var(--local_tipbooking-text-muted);
+    cursor: not-allowed;
+}
+
+/* Slots: one look per state, with an icon besides the colour for busy and own ones. */
+.local_tipbooking-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+}
+
+.local_tipbooking-slot {
+    min-height: 48px;
+    padding: 8px 12px;
+    border-radius: var(--local_tipbooking-radius-control);
+    border: 1.5px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-weight: 500;
+}
+
+.local_tipbooking-slot .icon {
+    margin: 0;
+}
+
+.local_tipbooking-slot.is-free {
+    background-color: var(--local_tipbooking-surface);
+    border-color: var(--local_tipbooking-action);
+    color: var(--local_tipbooking-action-text);
+}
+
+.local_tipbooking-slot.is-free:hover {
+    background-color: var(--local_tipbooking-action-subtle);
+}
+
+.local_tipbooking-slot.is-range,
+.local_tipbooking-slot.is-range:hover {
+    background-color: var(--local_tipbooking-slot-range);
+    border-color: var(--local_tipbooking-slot-range);
+    color: var(--local_tipbooking-on-action);
+}
+
+.local_tipbooking-slot.is-busy {
+    background-color: var(--local_tipbooking-slot-busy-bg);
+    border-color: var(--local_tipbooking-slot-busy-border);
+    color: var(--local_tipbooking-text-muted);
+    cursor: not-allowed;
+}
+
+.local_tipbooking-slot.is-mine {
+    background-color: var(--local_tipbooking-slot-mine);
+    border-color: var(--local_tipbooking-slot-mine);
+    color: var(--local_tipbooking-on-action);
+}
+
+.local_tipbooking-slot.is-unavailable {
+    background-color: var(--local_tipbooking-slot-past-bg);
+    border: 1.5px dashed var(--local_tipbooking-border);
+    color: var(--local_tipbooking-text-muted);
+    cursor: not-allowed;
+}
+
+.local_tipbooking-slot.is-skeleton {
+    background-color: var(--local_tipbooking-surface-muted);
+    animation: local_tipbooking-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes local_tipbooking-pulse {
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .local_tipbooking-slot.is-skeleton {
+        animation: none;
+    }
+
+    .local_tipbooking-card {
+        transition: none;
+    }
+}
+
+/* Legend of the slots. */
+.local_tipbooking-dot {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+    border-radius: 4px;
+    vertical-align: -2px;
+    border: 1.5px solid transparent;
+}
+
+.local_tipbooking-dot-free {
+    border-color: var(--local_tipbooking-action);
+}
+
+.local_tipbooking-dot-range {
+    background-color: var(--local_tipbooking-slot-range);
+}
+
+.local_tipbooking-dot-busy {
+    background-color: var(--local_tipbooking-slot-busy-bg);
+    border-color: var(--local_tipbooking-slot-busy-border);
+}
+
+.local_tipbooking-dot-mine {
+    background-color: var(--local_tipbooking-slot-mine);
+}
+
+.local_tipbooking-dot-unavailable {
+    background-color: var(--local_tipbooking-slot-past-bg);
+    border: 1.5px dashed var(--local_tipbooking-border);
+}
+
+/* Bar of the chosen range. */
+.local_tipbooking-rangebar.card {
+    border-color: var(--local_tipbooking-action);
+    border-radius: var(--local_tipbooking-radius-card);
+}
+
+/* On phones the slots go in two columns and the bar stays in reach while scrolling them. */
+@media (max-width: 767.98px) {
+    .local_tipbooking-rangebar.card {
+        position: sticky;
+        bottom: 0;
+        z-index: 2;
+        box-shadow: var(--local_tipbooking-shadow);
+    }
+
+    .local_tipbooking-slots {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
