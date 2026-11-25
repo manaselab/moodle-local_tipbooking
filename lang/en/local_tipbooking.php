@@ -179,6 +179,7 @@ $string['privacy:metadata:booking:timecreated'] = 'When the booking was made.';
 $string['privacy:metadata:booking:timeend'] = 'End of the booked range.';
 $string['privacy:metadata:booking:timestart'] = 'Start of the booked range.';
 $string['privacy:metadata:booking:userid'] = 'The person who made the booking.';
+$string['privacy:metadata:core_calendar'] = 'Each booking adds an event to the personal calendar of the person who booked, with the same start and end. Only that person sees it. It is removed when the booking is cancelled.';
 $string['privacy:metadata:core_message'] = 'Messages are sent to the person who books and to the managers of the space when a booking is made or cancelled.';
 $string['privacy:metadata:space'] = 'Bookable spaces.';
 $string['privacy:metadata:space:timemodified'] = 'When the space was last changed.';

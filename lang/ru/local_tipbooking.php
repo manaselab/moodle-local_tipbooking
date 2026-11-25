@@ -179,6 +179,7 @@ $string['privacy:metadata:booking:timecreated'] = 'Когда было сдел�
 $string['privacy:metadata:booking:timeend'] = 'Конец забронированного интервала.';
 $string['privacy:metadata:booking:timestart'] = 'Начало забронированного интервала.';
 $string['privacy:metadata:booking:userid'] = 'Пользователь, сделавший бронирование.';
+$string['privacy:metadata:core_calendar'] = 'Каждое бронирование добавляет событие в личный календарь забронировавшего человека с тем же временем начала и окончания. Его видит только этот человек. Событие удаляется при отмене бронирования.';
 $string['privacy:metadata:core_message'] = 'Сообщения отправляются тому, кто бронирует, и администраторам пространства, когда бронирование создаётся или отменяется.';
 $string['privacy:metadata:space'] = 'Пространства для бронирования.';
 $string['privacy:metadata:space:timemodified'] = 'Когда пространство было изменено в последний раз.';

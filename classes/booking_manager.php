@@ -146,6 +146,8 @@ class booking_manager {
             throw new slot_taken();
         }
 
+        calendar_sync::create_event($booking, $space);
+
         booking_created::create([
             'objectid' => $booking->id,
             'relateduserid' => $userid,
@@ -201,6 +203,8 @@ class booking_manager {
         $DB->update_record(booking::TABLE, $booking->to_record());
         $DB->delete_records(self::SLOT_TABLE, ['bookingid' => $booking->id]);
         $transaction->allow_commit();
+
+        calendar_sync::delete_event($booking->id);
 
         $event = booking_cancelled::create([
             'objectid' => $booking->id,

@@ -179,6 +179,7 @@ $string['privacy:metadata:booking:timecreated'] = 'Брондоо качан ж�
 $string['privacy:metadata:booking:timeend'] = 'Брондолгон аралыктын аягы.';
 $string['privacy:metadata:booking:timestart'] = 'Брондолгон аралыктын башы.';
 $string['privacy:metadata:booking:userid'] = 'Брондоону жасаган адам.';
+$string['privacy:metadata:core_calendar'] = 'Ар бир брондоо брондогон адамдын жеке календарына ошол эле башталыш жана аяктоо убактысы менен окуя кошот. Аны ошол адам гана көрөт. Брондоо жокко чыгарылганда окуя өчүрүлөт.';
 $string['privacy:metadata:core_message'] = 'Брондоо түзүлгөндө же жокко чыгарылганда брондогон адамга жана мейкиндиктин администраторлоруна билдирүү жөнөтүлөт.';
 $string['privacy:metadata:space'] = 'Брондоого мүмкүн болгон мейкиндиктер.';
 $string['privacy:metadata:space:timemodified'] = 'Мейкиндик акыркы жолу качан өзгөртүлгөн.';

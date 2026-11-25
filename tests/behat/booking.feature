@@ -59,3 +59,18 @@ Feature: Book a range of slots of a space
     Then I should see "Booking cancelled. The time is free again."
     And I should see "Cancelled" in the "Lab 1" "list_item"
     And "Cancel" "button" should not exist in the "Lab 1" "list_item"
+
+  Scenario: A booking shows only in the calendar of the user who made it
+    Given the following "local_tipbooking > spaces" exist:
+      | name  | admins   | hourfrom | hourto | slothours | startsin | weekdays |
+      | Lab 1 | manager1 | 09:00    | 13:00  | 1         | 3        | 127      |
+    And the following "local_tipbooking > bookings" exist:
+      | space | user     | daysahead | from  | to    |
+      | Lab 1 | student1 | 3         | 09:00 | 11:00 |
+    When I log in as "student1"
+    And I visit "/calendar/view.php?view=upcoming"
+    Then I should see "Lab 1" in the "region-main" "region"
+    And I log out
+    And I log in as "manager1"
+    And I visit "/calendar/view.php?view=upcoming"
+    And I should not see "Lab 1" in the "region-main" "region"

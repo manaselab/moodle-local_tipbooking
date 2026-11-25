@@ -160,6 +160,8 @@ class space_manager {
         }
 
         $transaction = $DB->start_delegated_transaction();
+        // The upcoming bookings were cancelled above with their events; these are the past ones.
+        calendar_sync::delete_events_where('spaceid = :spaceid', ['spaceid' => $spaceid]);
         $DB->delete_records(booking_manager::SLOT_TABLE, ['spaceid' => $spaceid]);
         $DB->delete_records(booking::TABLE, ['spaceid' => $spaceid]);
         $DB->delete_records(self::ADMIN_TABLE, ['spaceid' => $spaceid]);

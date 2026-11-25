@@ -24,6 +24,7 @@ use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
 use core_privacy\tests\provider_testcase;
 use local_tipbooking\booking_manager;
+use local_tipbooking\calendar_sync;
 use local_tipbooking\models\booking;
 use local_tipbooking\models\space;
 use local_tipbooking\slot_calculator;
@@ -99,7 +100,7 @@ final class provider_test extends provider_testcase {
     public function test_get_metadata(): void {
         $items = provider::get_metadata(new collection('local_tipbooking'))->get_collection();
         $this->assertSame(
-            [booking::TABLE, space_manager::ADMIN_TABLE, space::TABLE, 'core_message'],
+            [booking::TABLE, space_manager::ADMIN_TABLE, space::TABLE, 'core_message', 'core_calendar'],
             array_map(fn($item) => $item->get_name(), $items)
         );
     }
@@ -176,6 +177,7 @@ final class provider_test extends provider_testcase {
         provider::delete_data_for_user(new approved_contextlist($this->one, 'local_tipbooking', [$context->id]));
 
         $this->assertFalse($DB->record_exists(booking::TABLE, ['userid' => $this->one->id]));
+        $this->assertFalse($DB->record_exists('event', ['component' => calendar_sync::COMPONENT, 'userid' => $this->one->id]));
         $this->assertSame(0, $DB->count_records(booking_manager::SLOT_TABLE, ['spaceid' => $this->space->id]));
         $this->assertTrue($DB->record_exists(booking::TABLE, ['userid' => $this->two->id]));
         $this->assertSame([(int) $this->manager->id], space_manager::get_admin_ids($this->space->id));
@@ -216,8 +218,11 @@ final class provider_test extends provider_testcase {
         provider::delete_data_for_all_users_in_context(\context_user::instance($this->one->id));
         $this->assertSame(2, $DB->count_records(booking::TABLE));
 
+        $this->assertSame(1, $DB->count_records('event', ['component' => calendar_sync::COMPONENT]));
+
         provider::delete_data_for_all_users_in_context(context_system::instance());
         $this->assertSame(0, $DB->count_records(booking::TABLE));
+        $this->assertSame(0, $DB->count_records('event', ['component' => calendar_sync::COMPONENT]));
         $this->assertSame(0, $DB->count_records(booking_manager::SLOT_TABLE));
         $this->assertSame(0, $DB->count_records(space_manager::ADMIN_TABLE));
         $this->assertTrue($DB->record_exists(space::TABLE, ['id' => $this->space->id, 'usermodified' => 0]));

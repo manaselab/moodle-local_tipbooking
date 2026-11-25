@@ -2,6 +2,15 @@
 
 All notable changes to this plugin are documented here.
 
+## 1.1.0 — 2026-11-25 (`2026112500`)
+
+### Added
+
+- **Calendar** — each new booking adds a user event to the calendar of the person who booked,
+  with the same start and end and a link to the space. Only that person sees it. It is deleted
+  when the booking is cancelled, when the space is deleted and through the privacy API, and it
+  cannot be edited or deleted by hand. Bookings made before this version have no event.
+
 ## 1.0.0 — 2026-11-24 (`2026112400`)
 
 First release: a showcase of bookable spaces where any signed-in user books a range of

@@ -29,6 +29,7 @@ use core_privacy\local\request\transform;
 use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
 use local_tipbooking\booking_manager;
+use local_tipbooking\calendar_sync;
 use local_tipbooking\models\booking;
 use local_tipbooking\models\space;
 use local_tipbooking\space_manager;
@@ -78,6 +79,7 @@ class provider implements
         ], 'privacy:metadata:space');
 
         $collection->add_subsystem_link('core_message', [], 'privacy:metadata:core_message');
+        $collection->add_subsystem_link('core_calendar', [], 'privacy:metadata:core_calendar');
 
         return $collection;
     }
@@ -193,6 +195,7 @@ class provider implements
         if (!$context instanceof context_system) {
             return;
         }
+        $DB->delete_records('event', ['component' => calendar_sync::COMPONENT, 'eventtype' => calendar_sync::EVENTTYPE]);
         $DB->delete_records(booking_manager::SLOT_TABLE);
         $DB->delete_records(booking::TABLE);
         $DB->delete_records(space_manager::ADMIN_TABLE);
@@ -241,6 +244,7 @@ class provider implements
         [$insql, $params] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
 
         $transaction = $DB->start_delegated_transaction();
+        calendar_sync::delete_events_where('userid ' . $insql, $params);
         $DB->delete_records_select(
             booking_manager::SLOT_TABLE,
             'bookingid IN (SELECT id FROM {' . booking::TABLE . '} WHERE userid ' . $insql . ')',

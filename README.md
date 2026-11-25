@@ -5,7 +5,7 @@
 <h1 align="center">Space booking</h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.0.0-informational" alt="Version">
+  <img src="https://img.shields.io/badge/version-1.1.0-informational" alt="Version">
   <a href="https://moodle.org"><img src="https://img.shields.io/badge/Moodle-4.5%2B-orange?logo=moodle" alt="Moodle"></a>
   <img src="https://img.shields.io/badge/PHP-8.1%2B-777BB4?logo=php&logoColor=white" alt="PHP">
   <img src="https://img.shields.io/badge/License-GPL--3.0-green" alt="License">
@@ -34,6 +34,9 @@ no waiting list. It does not modify Moodle core or any theme.
 - **Cancellation** — people cancel their own upcoming bookings; space managers cancel any.
 - **Notifications** — the person who books and the managers of the space are notified when a
   booking is made or cancelled.
+- **Calendar** — each booking adds an event with the same start and end to the calendar of
+  the person who booked; nobody else sees it. It goes away when the booking is cancelled, and
+  it cannot be edited by hand.
 
 ## 🧭 Use cases
 
@@ -94,7 +97,7 @@ This plugin has no settings page. Spaces are managed from
 ## 🗑️ Uninstalling
 
 Uninstalling from **Site administration › Plugins › Plugins overview** removes the spaces,
-their images and every booking.
+their images, every booking and their calendar events.
 
 ## 📄 License
 

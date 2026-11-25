@@ -179,6 +179,7 @@ $string['privacy:metadata:booking:timecreated'] = 'Rezervasyonun yapıldığı z
 $string['privacy:metadata:booking:timeend'] = 'Rezerve edilen aralığın sonu.';
 $string['privacy:metadata:booking:timestart'] = 'Rezerve edilen aralığın başlangıcı.';
 $string['privacy:metadata:booking:userid'] = 'Rezervasyonu yapan kişi.';
+$string['privacy:metadata:core_calendar'] = 'Her rezervasyon, rezervasyonu yapan kişinin kişisel takvimine aynı başlangıç ve bitiş saatine sahip bir etkinlik ekler. Etkinliği yalnızca o kişi görür. Rezervasyon iptal edildiğinde etkinlik silinir.';
 $string['privacy:metadata:core_message'] = 'Bir rezervasyon yapıldığında veya iptal edildiğinde rezervasyonu yapan kişiye ve alanın yöneticilerine mesaj gönderilir.';
 $string['privacy:metadata:space'] = 'Rezerve edilebilen alanlar.';
 $string['privacy:metadata:space:timemodified'] = 'Alanın son değiştirildiği zaman.';
