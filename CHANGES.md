@@ -2,6 +2,13 @@
 
 All notable changes to this plugin are documented here.
 
+## Unreleased
+
+### Fixed
+
+- **Space form** — the description editor now gets the system context, so it applies the
+  filters of that context and no longer raises a developer debugging notice.
+
 ## 1.1.0 — 2026-11-25 (`2026112500`)
 
 ### Added

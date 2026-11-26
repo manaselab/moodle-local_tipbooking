@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/formslib.php');
 
+use core\context\system;
 use core_date;
 use moodleform;
 
@@ -65,10 +66,13 @@ class space_form extends moodleform {
     /**
      * Options of the editor of the description.
      *
+     * The context is the one the description is saved in: without it the editor ignores the
+     * filters of that context and core warns about it.
+     *
      * @return array The options.
      */
     public static function editor_options(): array {
-        return ['maxfiles' => 0, 'noclean' => false, 'trusttext' => false];
+        return ['maxfiles' => 0, 'noclean' => false, 'trusttext' => false, 'context' => system::instance()];
     }
 
     /**
